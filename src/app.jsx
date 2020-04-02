@@ -1,8 +1,19 @@
 import React, {useState} from 'react';
 
+const StartButton = () =>{
+  return(
+    <button id='startButton'>
+      <img id='logo' src="/windows.png" alt="Windows logo"/>
+      <span id='start-word'>start</span>
+    </button>
+  )
+}
+
 const TaskBar = () => {
   return(
-    <div id='taskBar'></div>
+    <div id='taskBar'>
+      <StartButton />
+    </div>
   );
 };
 
