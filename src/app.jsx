@@ -9,17 +9,34 @@ const TaskBar = () => {
 const Selection = (props) =>{
   const wid = props.mousePosition.x - props.initialPos.x;
   const hei = props.mousePosition.y - props.initialPos.y;
+  let px, py, rot;
+  if(wid < 0 && hei < 0){
+    rot = 180;
+    px = props.initialPos.x;
+    py = props.initialPos.y;
+  } else if (hei < 0){
+    rot = 180;
+    px = props.initialPos.x + wid/2;
+    py = props.initialPos.y;
+  } else if (wid < 0){
+    rot = 180;
+    px = props.initialPos.x;
+    py = props.initialPos.y + hei/2;
+  }
   return(
-    <div 
-      className='selection'
+    <rect 
       style={{
         display: props.visible,
-        left: props.initialPos.x,
-        top: props.initialPos.y,
-        width: Math.abs(wid),
-        height: Math.abs(hei),
       }}
-    ></div>
+      x={props.initialPos.x}
+      y= {props.initialPos.y}
+      width= {Math.abs(wid)}
+      height= {Math.abs(hei)}
+      fill='transparent'
+      stroke='hsl(0,0%,35%)'
+      strokeDasharray='1,2'
+      transform= {`rotate(${rot} ${px} ${py})`}
+    ></rect>
   );
 };
 
@@ -38,17 +55,19 @@ const Desktop = () => {
     handleMouseMove({x:event.clientX, y: event.clientY})
   }
   return(
-    <div 
-      id='desktop'
-      onMouseDown={(e)=>{mouseClicked(e)}}
-      onMouseMove={(e)=>{mouseMoved(e)}}
-      onMouseUp={()=>{handleShowSelect('none')}}
-    >
-      <Selection 
-        initialPos={initialPos}
-        mousePosition={mouseMove}
-        visible={showSelect}
-      />
+    <div id='desktopContainer'>
+      <svg 
+        id='desktop'
+        onMouseDown={(e)=>{mouseClicked(e)}}
+        onMouseMove={(e)=>{mouseMoved(e)}}
+        onMouseUp={()=>{handleShowSelect('none')}}
+      >
+        <Selection 
+          initialPos={initialPos}
+          mousePosition={mouseMove}
+          visible={showSelect}
+        />
+      </svg>
     </div>
   );
 };
