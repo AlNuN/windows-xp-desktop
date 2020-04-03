@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 
 const Shortcut = (props) =>{
   return(
@@ -98,11 +98,17 @@ const Selection = (props) =>{
   );
 };
 
+function reducer(state, action){
+  let x = [...state]
+  x.splice(action.index,1,{x:action.x, y:action.y})
+  return x; 
+}
+
 const Desktop = () => {
   const [initialPos, handleInitialPos] = useState({x:0, y:0})
   const [mouseMove, handleMouseMove] = useState({x:0, y:0});
   const [showSelect, handleShowSelect] = useState(false)
-  const [shortcutPos, handleShortcutPos] = useState([{x:50, y:50}])
+  const [shortcutPos, dispatch] = useReducer(reducer,[{x:50, y:50}, {x: 50, y: 130}])
   const [shortcutMove, handleShortcutMove] = useState(-1)
 
   const mouseClicked = event =>{
@@ -120,7 +126,7 @@ const Desktop = () => {
 
   const mouseMoved = event =>{
     shortcutMove !== -1 ? 
-      handleShortcutPos([{x: event.clientX, y: event.clientY}]):
+      dispatch({index: shortcutMove, x: event.clientX, y: event.clientY}):
       handleMouseMove({x:event.clientX, y: event.clientY})
   }
   return(
@@ -144,6 +150,12 @@ const Desktop = () => {
           text= 'Recycle Bin'
           textAlign= {-15}
           position={shortcutPos[0]}
+        />
+        <Shortcut 
+          source= '/cs.png'
+          text= 'Counter-Strike 1.6'
+          textAlign= {-30}
+          position={shortcutPos[1]}
         />
       </svg>
     </div>
